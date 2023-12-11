@@ -15,3 +15,13 @@ class AddProductToCartSuccessState extends AddToCartState{}
 
 class AddProductToWishlistSuccessState extends AddToCartState{}
 
+class RemoveProductFromCartSuccessState extends AddToCartState{
+  final bool showCartPage;
+  RemoveProductFromCartSuccessState(this.showCartPage);
+}
+
+class RemoveProductFromWishlistSuccessState extends AddToCartState{
+  final bool showWishlistPage;
+  RemoveProductFromWishlistSuccessState(this.showWishlistPage);
+}
+

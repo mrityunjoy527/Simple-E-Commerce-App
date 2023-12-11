@@ -1,8 +1,10 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/bloc/add_to_card_bloc.dart';
 import 'package:untitled/product_data/data_model.dart';
+import 'package:untitled/show_dialog.dart';
 
 class ProductTile extends StatelessWidget {
   final ProductDataModel product;
@@ -21,20 +23,46 @@ class ProductTile extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Container(
-                  decoration: const BoxDecoration(shape: BoxShape.rectangle),
-                  child: Image.network(
-                    product.images.first,
+                CarouselSlider(
+                  items: product.images.map((image) {
+                    return Container(
+                      decoration:
+                          const BoxDecoration(shape: BoxShape.rectangle),
+                      child: Image.network(image,
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.cover),
+                    );
+                  }).toList(),
+                  options: CarouselOptions(
+                    enableInfiniteScroll: false,
+                    viewportFraction: 1.0,
+                    enlargeCenterPage: false,
+                    autoPlay: true,
+                    padEnds: false,
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        context.read<AddToCartBloc>().add(
-                            AddProductToWishlistEvent(
-                                productDataModel: product));
+                      onPressed: () async {
+                        if (product.isWishlisted) {
+                          bool sure = await showConfirmingDialog(context, 'wishlist');
+                          if(!sure) return;
+                          if (!context.mounted) return;
+                          context.read<AddToCartBloc>().add(
+                                RemoveProductFromWishlistEvent(
+                                  false,
+                                  productDataModel: product,
+                                ),
+                              );
+                        } else {
+                          context.read<AddToCartBloc>().add(
+                                AddProductToWishlistEvent(
+                                  productDataModel: product,
+                                ),
+                              );
+                        }
                       },
                       icon: product.isWishlisted
                           ? Icon(
@@ -49,9 +77,24 @@ class ProductTile extends StatelessWidget {
                             ),
                     ),
                     IconButton(
-                      onPressed: () {
-                        context.read<AddToCartBloc>().add(
-                            AddProductToCartEvent(productDataModel: product));
+                      onPressed: () async {
+                        if (product.isCarted) {
+                          bool sure = await showConfirmingDialog(context, 'cart');
+                          if(!sure) return;
+                          if(!context.mounted) return;
+                          context.read<AddToCartBloc>().add(
+                                RemoveProductFromCartEvent(
+                                  false,
+                                  productDataModel: product,
+                                ),
+                              );
+                        } else {
+                          context.read<AddToCartBloc>().add(
+                                AddProductToCartEvent(
+                                  productDataModel: product,
+                                ),
+                              );
+                        }
                       },
                       icon: product.isCarted
                           ? Icon(

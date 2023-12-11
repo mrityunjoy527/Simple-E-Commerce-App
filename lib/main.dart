@@ -29,7 +29,11 @@ class MyApp extends StatelessWidget {
     context.read<AddToCartBloc>().add(NavigateToHomePageEvent());
     return BlocBuilder<AddToCartBloc, AddToCartState>(
       builder: (context, state) {
-        if (state is NavigateToCartPageSuccessState) {
+        if(state is RemoveProductFromCartSuccessState) {
+          if(state.showCartPage) return const Cart();
+        }else if(state is RemoveProductFromWishlistSuccessState) {
+          if(state.showWishlistPage) return const WishList();
+        } else if (state is NavigateToCartPageSuccessState) {
           return const Cart();
         } else if (state is NavigateToWishlistPageSuccessState) {
           return const WishList();

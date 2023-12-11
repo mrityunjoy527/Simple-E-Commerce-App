@@ -38,5 +38,21 @@ class AddToCartBloc extends Bloc<AddToCartEvent, AddToCartState> {
       emit(NavigateToWishlistPageSuccessState());
     });
 
+    on<RemoveProductFromCartEvent>((event, emit) {
+      final data = Data();
+      final product = event.productDataModel;
+      product.isCarted = false;
+      data.removeCartProducts(product);
+      emit(RemoveProductFromCartSuccessState(event.isFromCartPage));
+    });
+
+    on<RemoveProductFromWishlistEvent>((event, emit) {
+      final data = Data();
+      final product = event.productDataModel;
+      product.isWishlisted = false;
+      data.removeWishlistProducts(product);
+      emit(RemoveProductFromWishlistSuccessState(event.isFromWishlistPage));
+    });
+
   }
 }

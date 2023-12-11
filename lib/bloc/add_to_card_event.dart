@@ -18,3 +18,15 @@ class AddProductToWishlistEvent extends AddToCartEvent{
   final ProductDataModel productDataModel;
   AddProductToWishlistEvent({required this.productDataModel});
 }
+
+class RemoveProductFromWishlistEvent extends AddToCartEvent{
+  final ProductDataModel productDataModel;
+  final bool isFromWishlistPage;
+  RemoveProductFromWishlistEvent(this.isFromWishlistPage, {required this.productDataModel});
+}
+
+class RemoveProductFromCartEvent extends AddToCartEvent{
+  final ProductDataModel productDataModel;
+  final bool isFromCartPage;
+  RemoveProductFromCartEvent(this.isFromCartPage, {required this.productDataModel});
+}

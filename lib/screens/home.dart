@@ -33,6 +33,10 @@ class _HomeState extends State<Home> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Product added to Cart")));
         }else if(state is AddProductToWishlistSuccessState) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Product added to Wishlist")));
+        }else if(state is RemoveProductFromCartSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Product removed from Cart")));
+        }else if(state is RemoveProductFromWishlistSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Product removed to Wishlist")));
         }
       },
       builder: (context, state) {

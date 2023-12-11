@@ -14,47 +14,74 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-
   static final _data = Data();
   final products = _data.getCartProducts();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text(
-          "Cart Products",
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.read<AddToCartBloc>().add(NavigateToHomePageEvent());
-            },
-            icon: const Icon(
-              CupertinoIcons.house_fill,
-              color: Colors.white,
+    return BlocConsumer<AddToCartBloc, AddToCartState>(
+      listener: (context, state) {
+        if (state is RemoveProductFromCartSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Product removed to cart")));
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.blue,
+            title: const Text(
+              "Cart Products",
+              style: TextStyle(color: Colors.white),
             ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  context.read<AddToCartBloc>().add(NavigateToHomePageEvent());
+                },
+                icon: const Icon(
+                  CupertinoIcons.house_fill,
+                  color: Colors.white,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  context
+                      .read<AddToCartBloc>()
+                      .add(NavigateToWishlistPageEvent());
+                },
+                icon: const Icon(
+                  CupertinoIcons.heart_fill,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {
-              context.read<AddToCartBloc>().add(NavigateToWishlistPageEvent());
+          body: ListView.builder(
+            shrinkWrap: true,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return ListedProductTile(
+                product: products.elementAt(index),
+                icon: Icon(
+                  CupertinoIcons.cart_fill,
+                  color: Colors.blue[700],
+                  size: 40,
+                ),
+                removeFrom: () {
+                  context.read<AddToCartBloc>().add(
+                        RemoveProductFromCartEvent(
+                          true,
+                          productDataModel: products.elementAt(index),
+                        ),
+                      );
+                },
+                from: 'cart',
+              );
             },
-            icon: const Icon(
-              CupertinoIcons.heart_fill,
-              color: Colors.white,
-            ),
           ),
-        ],
-      ),
-      body: ListView.builder(
-        shrinkWrap: true,
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ListedProductTile(product: products.elementAt(index));
-        },
-      ),
+        );
+      },
     );
   }
 }

@@ -148,6 +148,14 @@ class Data {
   final Set<ProductDataModel> _cartProducts = {};
   final Set<ProductDataModel> _wishlistProducts = {};
 
+  void removeCartProducts(ProductDataModel product) {
+    _cartProducts.remove(product);
+  }
+
+  void removeWishlistProducts(ProductDataModel product) {
+    _wishlistProducts.remove(product);
+  }
+
   void addCartProducts(ProductDataModel product) {
     _cartProducts.add(product);
   }
